@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: config-server
+
+  output:
+    ansi:
+      enabled: ALWAYS
+
+server:
+  port: 19096
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:19090/eureka/

@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: auth-service
+
+  output:
+    ansi:
+      enabled: ALWAYS
+
+server:
+  port: 19095
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:19090/eureka/
