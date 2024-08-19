@@ -35,15 +35,11 @@ public class LocalJwtAuthenticationFilter implements GlobalFilter {
     public Mono<Void> filter(final ServerWebExchange exchange, final GatewayFilterChain chain) {
         // 접근하는 URI 의 Path 값을 받아옵니다.
         String path = exchange.getRequest().getURI().getPath();
-        System.out.println("Response Status JWT Filter: " + exchange.getResponse().getStatusCode());
-        System.out.println("path:"+path);
         // /members 로 시작하는 요청들은 검증하지 않습니다.
         if (path.startsWith("/members")) {
-            System.out.println("걸렸다임:"+path);
             return chain.filter(exchange);
         }
 
-        System.out.println("안걸렸음 ㅋ");
         String token = extractToken(exchange);
         // 토큰이 존재하지 않거나, validateToken(token) 기준에 부합하지 않으면 401 에러를 응답합니다.
         if (token == null || !validateToken(token)) {
