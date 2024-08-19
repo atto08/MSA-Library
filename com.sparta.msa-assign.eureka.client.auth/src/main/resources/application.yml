@@ -6,8 +6,29 @@ spring:
     ansi:
       enabled: ALWAYS
 
+  datasource:
+    url: jdbc:mysql://endpoint/db
+    username: username
+    password: password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        use_sql_comments: true;
+        dialect: org.hibernate.dialect.MySQLDialect
+
 server:
   port: 19095
+
+jwt:
+  access-expiration: 360000
+  secret-key: ${jwt.secret-key}
+  admin-token: ${admin-token}
 
 eureka:
   client:
