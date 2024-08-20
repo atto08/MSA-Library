@@ -2,6 +2,8 @@ package com.sparta.msa_assign.eureka.client.auth.service;
 
 import com.sparta.msa_assign.eureka.client.auth.dto.request.LoginDto;
 import com.sparta.msa_assign.eureka.client.auth.dto.request.SignupDto;
+import com.sparta.msa_assign.eureka.client.auth.dto.request.UpdateProfileDto;
+import com.sparta.msa_assign.eureka.client.auth.dto.response.MemberResponseDto;
 import com.sparta.msa_assign.eureka.client.auth.dto.response.TokenDto;
 import com.sparta.msa_assign.eureka.client.auth.entity.Member;
 import com.sparta.msa_assign.eureka.client.auth.entity.UserRoleEnum;
@@ -15,7 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.crypto.SecretKey;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthService {
@@ -109,5 +114,47 @@ public class AuthService {
     public Boolean verifyMember(final String memberId) {
         // userId 로 User 를 조회 후 isPresent() 로 존재유무를 리턴함
         return memberRepository.findByUsername(memberId).isPresent();
+    }
+
+    // 회원 목록 조회
+    public List<MemberResponseDto> getMemberInfoList(String role) {
+
+        return memberRepository.findAll().stream()
+                .map(MemberResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    // 회원 정보 조회
+    public MemberResponseDto getMemberInfo(String memberId) {
+
+        return memberRepository.findById(memberId).stream()
+                .map(MemberResponseDto::new)
+                .findFirst()  // 스트림의 첫 번째 요소를 Optional로 반환
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+    }
+
+    // 회원 정보 수정
+    @Transactional
+    public MemberResponseDto updateMemberInfo(String memberId, UpdateProfileDto updateProfileDto) {
+
+        Member member = getMember(memberId);
+        // 회원 정보 업데이트
+        member.updateMemberInfo(updateProfileDto);
+        return new MemberResponseDto(member);
+    }
+
+    // 회원 삭제
+    @Transactional
+    public String deleteMember(String memberId) {
+        Member member = getMember(memberId);
+        // 회원 정보 삭제
+        memberRepository.delete(member);
+        return "[" + member.getUsername() + "] 회원 삭제 완료";
+    }
+
+    public Member getMember(String username) {
+        return memberRepository.findById(username).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 유저입니다.")
+        );
     }
 }
