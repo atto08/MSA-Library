@@ -1,6 +1,7 @@
 package com.sparta.msa_assign.eureka.client.auth.entity;
 
 import com.sparta.msa_assign.eureka.client.auth.dto.request.SignupDto;
+import com.sparta.msa_assign.eureka.client.auth.dto.request.UpdateProfileDto;
 import com.sparta.msa_assign.eureka.client.auth.util.Timestamped;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -51,5 +52,14 @@ public class Member extends Timestamped {
         this.lastName = signupDto.getLastName();
         this.phoneNumber = signupDto.getPhoneNumber();
         this.address = signupDto.getAddress();
+    }
+
+
+    public void updateMemberInfo(UpdateProfileDto updateProfileDto) {
+        this.email = updateProfileDto.getEmail();
+        this.firstName = updateProfileDto.getFirstName();
+        this.lastName = updateProfileDto.getLastName();
+        this.phoneNumber = updateProfileDto.getPhoneNumber();
+        this.address = updateProfileDto.getAddress();
     }
 }
